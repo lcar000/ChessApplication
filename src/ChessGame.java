@@ -7,7 +7,7 @@ public abstract class ChessGame {
     public ChessGame() {
         // standard starting board positions
         board = new int[][]{{10, 9, 8, 11, 12, 8, 9, 10},
-                            {1, 1, 1, 1, 1, 1, 1, 1},
+                            {7, 7, 7, 7, 7, 7, 7, 7},
                             {0, 0, 0, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 0, 0, 0},
@@ -35,23 +35,34 @@ public abstract class ChessGame {
             return false;
         }
 
-        if ((playerTurn.equals("WHITE")) && (board[p.getX()][p.getY()] <= 6)) {
+        if (playerTurn.equals("WHITE") && board[p.getX()][p.getY()] <= 6) {
             selectedPiece = board[p.getX()][p.getY()];
             selectedPiecePosition = p;
-            playerTurn = "BLACK";
             return true;
         }
 
-        if ((playerTurn.equals("BLACK")) && (board[p.getX()][p.getY()] >= 7)) {
+        if (playerTurn.equals("BLACK") && board[p.getX()][p.getY()] >= 7) {
             selectedPiece = board[p.getX()][p.getY()];
             selectedPiecePosition = p;
-            playerTurn = "WHITE";
             return true;
         }
         return false;
     }
     public void movePiece(Point newPosition) {
+
         board[newPosition.getX()][newPosition.getY()] = selectedPiece;
         board[selectedPiecePosition.getX()][selectedPiecePosition.getY()] = 0;
+
+        if(playerTurn.equals("WHITE")) {
+            playerTurn = "BLACK";
+        }
+        else {
+            playerTurn = "WHITE";
+        }
+
+    }
+
+    public int getSelectedPiece() {
+        return selectedPiece;
     }
 }

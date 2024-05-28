@@ -2,14 +2,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 
 public class ChessBoard extends JFrame implements MouseListener {
     private final ChessController controller;
+    private final ChessGUI gui;
     private final JPanel boardPanel;
     private final JLabel testPointLabel;
 
-    public ChessBoard(ChessController controller) {
+    public ChessBoard(ChessController controller, ChessGUI gui) {
         this.controller = controller;
+        this.gui = gui;
+
         setTitle("Chess Board");
         setSize(650, 685);
         setResizable(false);
@@ -37,14 +41,22 @@ public class ChessBoard extends JFrame implements MouseListener {
         int cellWidth = boardPanel.getWidth() / 8;
         int cellHeight = boardPanel.getHeight() / 8;
 
+        //Draws squares
         for(int row = 0; row < 8; row++) {
             for(int col = 0; col < 8; col++) {
                 if ((row + col) % 2 == 0) {
                     g.setColor(Color.WHITE);
                 } else {
-                    g.setColor(Color.BLACK);
+                    g.setColor(controller.getGameDisplayColor());
                 }
-                g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
+                g.fillRect(row * cellWidth, col * cellHeight, cellWidth, cellHeight);
+            }
+        }
+        //Draws pieces in correct square
+        for(int row = 0; row < 8; row++) {
+            for(int col = 0; col < 8; col++) {
+                g.setColor(Color.BLUE);
+                g.drawString(String.valueOf(controller.getGameBoard()[row][col]), row * cellWidth, (col * cellHeight + 15));
             }
         }
     }
@@ -55,8 +67,12 @@ public class ChessBoard extends JFrame implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        System.out.println("X: " + x + " Y: " + y);
+
         controller.newBoardClick(x,y);
+        gui.updateGameMenu();
+        //Redraws based on updated state
+        repaint();
+
         testPointLabel.setText(controller.getBoardClick());
     }
 

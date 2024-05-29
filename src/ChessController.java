@@ -56,12 +56,19 @@ public class ChessController {
         //If piece selected and valid move, moves piece
         if(pieceSelected && utilityGame.isValidMove(boardClick)) {
             currentGame.movePiece(boardClick);
+            utilityGame.movePiece(boardClick);
             pieceSelected = false;
             playerTurn = currentGame.getPlayerTurn();
             gameInfo.set(3, playerTurn);
         } else {
             //if valid piece clicked, it is selected.
+
+            //System.out.println("New Board Click Test");
             pieceSelected = currentGame.selectPiece(boardClick);
+            utilityGame.selectPiece(boardClick);
+            //System.out.println(currentGame.getSelectedPiece());
+            //System.out.println(pieceSelected);
+            //playerTurn = currentGame.getPlayerTurn();
         }
     }
 

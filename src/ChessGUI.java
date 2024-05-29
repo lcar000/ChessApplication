@@ -58,7 +58,8 @@ public class ChessGUI extends JFrame {
 
     private void showLoadGamesMenu() {
         loadGamesMenu = new JPanel();
-        setSize(350, 500);
+        loadGamesMenu.setLayout(new GridLayout(15, 1));
+        setSize(300, 500);
         String[] gameNames = controller.getSavedGames();
 
         for(int i = 0; i < gameNames.length; i++) {
@@ -74,7 +75,7 @@ public class ChessGUI extends JFrame {
                     repaint();
                 }
             });
-            loadGamesMenu.add(button, BorderLayout.SOUTH);
+            loadGamesMenu.add(button);
         }
         add(loadGamesMenu);
 
@@ -91,7 +92,8 @@ public class ChessGUI extends JFrame {
 
         JComboBox<String> timeControls = new JComboBox<>(new String[]{"1 Minute", "3 Minute", "10 Minute", "30 Minute"});
 
-        displayColor = Color.BLACK;
+        //Default color is brown
+        displayColor = new Color(115, 50, 20);
         JButton colorButton = new JButton("Choose Display Color");
 
         colorButton.addActionListener(new ActionListener() {

@@ -45,20 +45,68 @@ public class ChessBoard extends JFrame implements MouseListener {
         for(int row = 0; row < 8; row++) {
             for(int col = 0; col < 8; col++) {
                 if ((row + col) % 2 == 0) {
-                    g.setColor(Color.WHITE);
+                    if(controller.getGameDisplayColor().equals(new Color(115, 50, 20))) {
+                        g.setColor(new Color(213, 154, 125));
+                    } else {
+                        g.setColor(Color.WHITE);
+                    }
                 } else {
                     g.setColor(controller.getGameDisplayColor());
                 }
                 g.fillRect(row * cellWidth, col * cellHeight, cellWidth, cellHeight);
             }
         }
+        //Sets up font
+        Font font = new Font("Arial", Font.BOLD, 13);
+        g.setFont(font);
+
         //Draws pieces in correct square
         for(int row = 0; row < 8; row++) {
             for(int col = 0; col < 8; col++) {
-                g.setColor(Color.BLUE);
-                g.drawString(String.valueOf(controller.getGameBoard()[row][col]), row * cellWidth, (col * cellHeight + 15));
+                g.setColor(Color.BLACK);
+                g.drawString(pieceNameConverter(controller.getGameBoard()[row][col]), row * cellWidth, (col * cellHeight + 25));
             }
         }
+    }
+
+    private String pieceNameConverter(int value) {
+        if(value == 1) {
+            return "White Pawn";
+        }
+        if(value == 2) {
+            return "White Bishop";
+        }
+        if(value == 3) {
+            return "White Knight";
+        }
+        if(value == 4) {
+            return "White Rook";
+        }
+        if(value == 5) {
+            return "White Queen";
+        }
+        if(value == 6) {
+            return "White King";
+        }
+        if(value == 7) {
+            return "Black Pawn";
+        }
+        if(value == 8) {
+            return "Black Bishop";
+        }
+        if(value == 9) {
+            return "Black Knight";
+        }
+        if(value == 10) {
+            return "Black Rook";
+        }
+        if(value == 11) {
+            return "Black Queen";
+        }
+        if(value == 12) {
+            return "Black King";
+        }
+        return "";
     }
 
 

@@ -20,7 +20,8 @@ public class CurrentGame extends ChessGame{
         gameName = null;
         player1Name = "Player 1";
         player2Name = "Player 2";
-        displayColor = Color.BLACK;
+        //Default is brown
+        displayColor = new Color(115, 50, 20);
         playerTurn = "WHITE";
         timer = 0;
     }

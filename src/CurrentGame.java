@@ -17,6 +17,7 @@ public class CurrentGame extends ChessGame{
 
     public CurrentGame() {
         //default settings
+
         gameName = null;
         player1Name = "Player 1";
         player2Name = "Player 2";

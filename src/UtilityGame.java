@@ -2,23 +2,53 @@ import java.util.Arrays;
 
 public class UtilityGame extends ChessGame{
 
+    private Point whiteKingPosition;
+    private Point blackKingPosition;
+
     public UtilityGame() {
         // default
+
+        whiteKingPosition = findKingPosition("WHITE");
+        blackKingPosition = findKingPosition("BLACK");
     }
     public UtilityGame(ChessGame saved_game) {
         this.board = saved_game.board;
         this.playerTurn = saved_game.playerTurn;
+        whiteKingPosition = findKingPosition("WHITE");
+        blackKingPosition = findKingPosition("BLACK");
     }
 
-    public boolean isValidMove(Point newPosition) {
+    //Assumes isValidMove called
+    public boolean tryMove(Point newPosition) {
+        System.out.println("Try Move Test, piece: " + selectedPiece);
+        System.out.println("Try Move Test, new position : " + newPosition);
+        int temp = board[newPosition.getX()][newPosition.getY()];
 
-        //trying to take own piece
-        if(playerTurn.equals("WHITE") && board[newPosition.getX()][newPosition.getY()] > 0 &&
-                                         board[newPosition.getX()][newPosition.getY()] <= 6) {
+        movePiece(newPosition, true);
+
+        if(kingIsInCheck()) {
+            board[newPosition.getX()][newPosition.getY()] = temp;
+            board[selectedPiecePosition.getX()][selectedPiecePosition.getY()] = selectedPiece;
             return false;
         }
-        if(playerTurn.equals("BLACK") && board[newPosition.getX()][newPosition.getY()] >= 7) {
-            return false;
+        board[newPosition.getX()][newPosition.getY()] = temp;
+        board[selectedPiecePosition.getX()][selectedPiecePosition.getY()] = selectedPiece;
+        return true;
+    }
+
+    public boolean isValidMove(Point newPosition, boolean checkTest) {
+        //Any time move is attempted, kings are found
+        whiteKingPosition = findKingPosition("WHITE");
+        blackKingPosition = findKingPosition("BLACK");
+        //trying to take own piece only check this part if not a check test
+        if(!checkTest) {
+            if (playerTurn.equals("WHITE") && board[newPosition.getX()][newPosition.getY()] > 0 &&
+                    board[newPosition.getX()][newPosition.getY()] <= 6) {
+                return false;
+            }
+            if (playerTurn.equals("BLACK") && board[newPosition.getX()][newPosition.getY()] >= 7) {
+                return false;
+            }
         }
 
         //if pawn
@@ -59,7 +89,7 @@ public class UtilityGame extends ChessGame{
     }
 
     private boolean queenMove(Point newPosition) {
-        //leverages rook and bishop moveset
+        //leverages rook and bishop move set
         return rookMove(newPosition) || bishopMove(newPosition);
     }
 
@@ -77,7 +107,7 @@ public class UtilityGame extends ChessGame{
         if(distX == 0) {
             int direction = (distY > 0) ? 1 : -1;
             y += direction;
-            while(y != newPosition.getY()) {
+            while(y != newPosition.getY() && y > 0) {
                 if(board[x][y] != 0) {
                     return false;
                 }
@@ -87,7 +117,7 @@ public class UtilityGame extends ChessGame{
         if(distY == 0) {
             int direction = (distX > 0) ? 1 : -1;
             x += direction;
-            while(x != newPosition.getX()) {
+            while(x != newPosition.getX() && x > 0) {
                 if(board[x][y] != 0) {
                     return false;
                 }
@@ -154,9 +184,119 @@ public class UtilityGame extends ChessGame{
         return false;
     }
 
-    public boolean isKingInCheck() {
+    public boolean kingIsInCheck() {
         //to do
+        if(whiteKingPosition == null || blackKingPosition == null) {
+            //King missing
+            System.out.println("King Check Test: KINGS NULL");
+            return false;
+        }
+
+
+        int originalSelectedPiece = selectedPiece;
+        Point originalSelectedPiecePosition = selectedPiecePosition;
+
+        boolean kingChecked = false;
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++) {
+                if(playerTurn.equals("WHITE") && board[x][y] >= 7) {
+
+                    selectedPiece = board[x][y];
+                    //multiply by 81 due to point implementation
+                    selectedPiecePosition = new Point(x * 81,y * 81);
+                    if(isValidMove(whiteKingPosition, true)) {
+                        selectedPiece = originalSelectedPiece;
+                        selectedPiecePosition = originalSelectedPiecePosition;
+                        return true;
+                    }
+                }
+                if(playerTurn.equals("BLACK") && board[x][y] <= 6 && board[x][y] > 0) {
+
+                    selectedPiece = board[x][y];
+                    selectedPiecePosition = new Point(x * 81,y * 81);
+                    if(isValidMove(blackKingPosition, true)) {
+                        selectedPiece = originalSelectedPiece;
+                        selectedPiecePosition = originalSelectedPiecePosition;
+                        return true;
+                    }
+                }
+            }
+        }
+        selectedPiece = originalSelectedPiece;
+        selectedPiecePosition = originalSelectedPiecePosition;
         return false;
+    }
+    public boolean checkMate() {
+        System.out.println(kingIsInCheck());
+        if(!kingIsInCheck()) {
+            return false;
+        }
+
+        //Check if king can move to safety
+        Point king = findKingPosition(playerTurn);
+        System.out.println("King Position: " + king);
+        for(int i = Math.max(0, king.getX() - 1); i <= Math.min(7, king.getX() + 1); i++) {
+            for(int j = Math.max(0, king.getY() - 1); j <= Math.min(7, king.getY() + 1); j++) {
+                //Excluded square king is on
+                if(i != king.getX() || j != king.getY()) {
+                    Point p = new Point(i * 81, j * 81);
+                    System.out.println("King Safety Point check: " + p);
+                    if (isValidMove(p, false) && tryMove(p)) {
+                        //not checkmate
+                        return false;
+                    }
+                }
+            }
+        }
+
+        //Check if any piece can block or capture attacking piece
+        //Check all pieces
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++) {
+                if ((playerTurn.equals("WHITE") && board[x][y] <= 6 && board[x][y] > 0) ||
+                        (playerTurn.equals("BLACK") && board[x][y] >= 7)) {
+
+                    int originalSelectedPiece = selectedPiece;
+                    Point originalSelectedPiecePosition = selectedPiecePosition;
+
+                    selectedPiece = board[x][y];
+                    selectedPiecePosition = new Point(x * 81,y * 81);
+
+                    //check all moves for each piece
+                    for(int targetX = 0; targetX < 8; targetX++) {
+                        for (int targetY = 0; targetY < 8; targetY++) {
+                            //Attempt valid moves that stop check
+                            System.out.println("Target test point: " + targetX  + " " + targetY);
+                            System.out.println(selectedPiece);
+                            System.out.println(selectedPiecePosition);
+                            Point p = new Point(targetX * 81, targetY * 81);
+                            if (isValidMove(p, false) && tryMove(p)) {
+                                return false;
+                            }
+                        }
+                    }
+
+                    selectedPiece = originalSelectedPiece;
+                    selectedPiecePosition = originalSelectedPiecePosition;
+                }
+            }
+        }
+        //no moves found - CHECKMATE
+        return true;
+    }
+
+    private Point findKingPosition(String playerColor) {
+        int king = playerColor.equals("WHITE") ? 6 : 12;
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++) {
+                if(board[x][y] == king) {
+                    //multiply by 81 because of point implementation
+                    return new Point(x * 81,y * 81);
+                }
+            }
+        }
+        //king not found
+        return null;
     }
 
 }

@@ -1,7 +1,10 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class ChessBoard extends JFrame implements MouseListener {
@@ -9,6 +12,20 @@ public class ChessBoard extends JFrame implements MouseListener {
     private final ChessGUI gui;
     private final JPanel boardPanel;
     private final JLabel testPointLabel;
+
+    private Image whitePawn;
+    private Image blackPawn;
+    private Image whiteBishop;
+    private Image blackBishop;
+    private Image whiteKnight;
+    private Image blackKnight;
+    private Image whiteRook;
+    private Image blackRook;
+    private Image whiteQueen;
+    private Image blackQueen;
+    private Image whiteKing;
+    private Image blackKing;
+
 
     public ChessBoard(ChessController controller, ChessGUI gui) {
         this.controller = controller;
@@ -34,6 +51,8 @@ public class ChessBoard extends JFrame implements MouseListener {
         add(boardPanel);
         boardPanel.addMouseListener(this);
         setVisible(true);
+
+        initializeImages();
     }
 
     private void drawGrid(Graphics g) {
@@ -64,51 +83,79 @@ public class ChessBoard extends JFrame implements MouseListener {
         for(int row = 0; row < 8; row++) {
             for(int col = 0; col < 8; col++) {
                 g.setColor(Color.BLACK);
-                g.drawString(pieceNameConverter(controller.getGameBoard()[row][col]), row * cellWidth, (col * cellHeight + 25));
+                //g.drawString(pieceNameConverter(controller.getGameBoard()[row][col]), row * cellWidth, (col * cellHeight + 25));
+                g.drawImage(pieceNameConverter(controller.getGameBoard()[row][col]), row * cellWidth, (col * cellHeight ), cellWidth, cellHeight, null);
             }
         }
+        if(controller.getCheckMate()) {
+            Font fontTwo = new Font("Arial", Font.BOLD, 40);
+            g.setFont(fontTwo);
+            g.setColor(Color.BLACK);
+            g.drawString("CHECK MATE", 200, 300);
+        }
     }
 
-    private String pieceNameConverter(int value) {
+    private Image pieceNameConverter(int value) {
         if(value == 1) {
-            return "White Pawn";
+            return whitePawn;
         }
         if(value == 2) {
-            return "White Bishop";
+            return whiteBishop;
         }
         if(value == 3) {
-            return "White Knight";
+            return whiteKnight;
         }
         if(value == 4) {
-            return "White Rook";
+            return whiteRook;
         }
         if(value == 5) {
-            return "White Queen";
+            return whiteQueen;
         }
         if(value == 6) {
-            return "White King";
+            return whiteKing;
         }
         if(value == 7) {
-            return "Black Pawn";
+            return blackPawn;
         }
         if(value == 8) {
-            return "Black Bishop";
+            return blackBishop;
         }
         if(value == 9) {
-            return "Black Knight";
+            return blackKnight;
         }
         if(value == 10) {
-            return "Black Rook";
+            return blackRook;
         }
         if(value == 11) {
-            return "Black Queen";
+            return blackQueen;
         }
         if(value == 12) {
-            return "Black King";
+            return blackKing;
         }
-        return "";
+        return null;
     }
 
+    private void initializeImages() {
+        //Initialize images
+        try
+        {
+            whitePawn = ImageIO.read(new File("white-pawn.png"));
+            blackPawn = ImageIO.read(new File("black-pawn.png"));
+            whiteBishop = ImageIO.read(new File("white-bishop.png"));
+            blackBishop = ImageIO.read(new File("black-bishop.png"));
+            whiteKnight = ImageIO.read(new File("white-knight.png"));
+            blackKnight = ImageIO.read(new File("black-knight.png"));
+            whiteRook = ImageIO.read(new File("white-rook.png"));
+            blackRook = ImageIO.read(new File("black-rook.png"));
+            whiteQueen = ImageIO.read(new File("white-queen.png"));
+            blackQueen = ImageIO.read(new File("black-queen.png"));
+            whiteKing = ImageIO.read(new File("white-king.png"));
+            blackKing = ImageIO.read(new File("black-king.png"));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     @Override

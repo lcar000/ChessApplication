@@ -10,8 +10,8 @@ public class ChessController {
     private SavedGames savedGames = new SavedGames();
     private boolean pieceSelected = false;
     private String playerTurn;
-
     private List<String> gameInfo = new ArrayList<>();
+    private boolean CheckMate = false;
 
     public ChessController() {
 
@@ -52,23 +52,30 @@ public class ChessController {
     public void newBoardClick(int x, int y) {
 
         boardClick = new Point(x, y);
-
-        //If piece selected and valid move, moves piece
-        if(pieceSelected && utilityGame.isValidMove(boardClick)) {
-            currentGame.movePiece(boardClick);
-            utilityGame.movePiece(boardClick);
-            pieceSelected = false;
-            playerTurn = currentGame.getPlayerTurn();
-            gameInfo.set(3, playerTurn);
+//        if(utilityGame.checkMate()) {
+//            System.out.println("CHECKMATE!");
+//        }
+        if(pieceSelected && utilityGame.isValidMove(boardClick, false)) {
+//            System.out.println("Checkmate Testing");
+//            if(utilityGame.checkMate()) {
+//                CheckMate = true;
+//                System.out.println("CHECKMATE!");
+//            }
+            if(utilityGame.tryMove(boardClick)) {
+                currentGame.movePiece(boardClick, false);
+                utilityGame.movePiece(boardClick, false);
+                //utilityGame.setPlayerTurn(currentGame.getPlayerTurn());
+                pieceSelected = false;
+                playerTurn = currentGame.getPlayerTurn();
+                gameInfo.set(3, playerTurn);
+            }
         } else {
-            //if valid piece clicked, it is selected.
-
-            //System.out.println("New Board Click Test");
             pieceSelected = currentGame.selectPiece(boardClick);
             utilityGame.selectPiece(boardClick);
-            //System.out.println(currentGame.getSelectedPiece());
-            //System.out.println(pieceSelected);
-            //playerTurn = currentGame.getPlayerTurn();
+        }
+        if(utilityGame.checkMate()) {
+            CheckMate = true;
+            System.out.println("CHECKMATE!");
         }
     }
 
@@ -92,4 +99,9 @@ public class ChessController {
     public Color getGameDisplayColor() {
         return currentGame.getDisplayColor();
     }
+
+    public boolean getCheckMate() {
+        return CheckMate;
+    }
+
 }

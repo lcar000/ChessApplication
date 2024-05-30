@@ -24,6 +24,14 @@ public abstract class ChessGame {
         return board;
     }
 
+    public void setBoard(int[][] board) {
+        this.board = board;
+    }
+
+    public void setPlayerTurn(String playerTurn) {
+        this.playerTurn = playerTurn;
+    }
+
     public String getPlayerTurn() {
         return playerTurn;
     }
@@ -48,19 +56,21 @@ public abstract class ChessGame {
         }
         return false;
     }
-    public void movePiece(Point newPosition) {
+    public void movePiece(Point newPosition, boolean testMove) {
 
         board[newPosition.getX()][newPosition.getY()] = selectedPiece;
         board[selectedPiecePosition.getX()][selectedPiecePosition.getY()] = 0;
 
-        if(playerTurn.equals("WHITE")) {
-            playerTurn = "BLACK";
-        }
-        else {
-            playerTurn = "WHITE";
+        if (!testMove) {
+            if (playerTurn.equals("WHITE")) {
+                playerTurn = "BLACK";
+            } else {
+                playerTurn = "WHITE";
+            }
         }
 
     }
+
 
     public int getSelectedPiece() {
         return selectedPiece;

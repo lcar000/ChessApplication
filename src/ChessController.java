@@ -17,6 +17,19 @@ public class ChessController {
 
     }
 
+    //for testing purposes
+    public void setNewCurrentGame(UtilityGame board) {
+        Color color = new Color(0, 0, 0);
+        currentGame = new CurrentGame("Demo", "Player 1", "Player 2", color, 10);
+        utilityGame = board;
+        gameInfo.add("Demo");
+        gameInfo.add("Player 1");
+        gameInfo.add("Player 2");
+        gameInfo.add(currentGame.playerTurn);
+        gameInfo.add("10");
+        pieceSelected = true;
+    }
+
     public void setNewCurrentGame(String gameName, String player1Name, String player2Name, Color displayColor, int time) {
         currentGame = new CurrentGame(gameName, player1Name, player2Name, displayColor, time);
         utilityGame = new UtilityGame();

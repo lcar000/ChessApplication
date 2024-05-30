@@ -11,6 +11,11 @@ public class Point {
         this.x = x / 81;
         this.y = y / 81;
     }
+    //for testing purposes
+    public Point(boolean holder, int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
     public int getX() {
         return x;

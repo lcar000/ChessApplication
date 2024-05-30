@@ -20,8 +20,6 @@ public class UtilityGame extends ChessGame{
 
     //Assumes isValidMove called
     public boolean tryMove(Point newPosition) {
-        System.out.println("Try Move Test, piece: " + selectedPiece);
-        System.out.println("Try Move Test, new position : " + newPosition);
         int temp = board[newPosition.getX()][newPosition.getY()];
 
         movePiece(newPosition, true);
@@ -227,20 +225,17 @@ public class UtilityGame extends ChessGame{
         return false;
     }
     public boolean checkMate() {
-        System.out.println(kingIsInCheck());
         if(!kingIsInCheck()) {
             return false;
         }
 
         //Check if king can move to safety
         Point king = findKingPosition(playerTurn);
-        System.out.println("King Position: " + king);
         for(int i = Math.max(0, king.getX() - 1); i <= Math.min(7, king.getX() + 1); i++) {
             for(int j = Math.max(0, king.getY() - 1); j <= Math.min(7, king.getY() + 1); j++) {
                 //Excluded square king is on
                 if(i != king.getX() || j != king.getY()) {
                     Point p = new Point(i * 81, j * 81);
-                    System.out.println("King Safety Point check: " + p);
                     if (isValidMove(p, false) && tryMove(p)) {
                         //not checkmate
                         return false;
@@ -266,9 +261,6 @@ public class UtilityGame extends ChessGame{
                     for(int targetX = 0; targetX < 8; targetX++) {
                         for (int targetY = 0; targetY < 8; targetY++) {
                             //Attempt valid moves that stop check
-                            System.out.println("Target test point: " + targetX  + " " + targetY);
-                            System.out.println(selectedPiece);
-                            System.out.println(selectedPiecePosition);
                             Point p = new Point(targetX * 81, targetY * 81);
                             if (isValidMove(p, false) && tryMove(p)) {
                                 return false;

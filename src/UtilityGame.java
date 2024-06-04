@@ -17,6 +17,13 @@ public class UtilityGame extends ChessGame{
         whiteKingPosition = findKingPosition("WHITE");
         blackKingPosition = findKingPosition("BLACK");
     }
+    //for testing purposes
+    public UtilityGame(int[][] board, String playerTurn) {
+        this.board = board;
+        this.playerTurn = playerTurn;
+        whiteKingPosition = findKingPosition("WHITE");
+        blackKingPosition = findKingPosition("BLACK");
+    }
 
     //Assumes isValidMove called
     public boolean tryMove(Point newPosition) {

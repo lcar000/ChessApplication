@@ -149,7 +149,7 @@ public class UtilityGame extends ChessGame{
         int x = selectedPiecePosition.getX() + directionX;
         int y = selectedPiecePosition.getY() + directionY;
 
-        while(x != newPosition.getX() && y != newPosition.getY()) {
+        while(x != newPosition.getX() && y != newPosition.getY() && x > 0 && y >0) {
             if(board[x][y] != 0) {
                 //path obstructed
                 return false;
@@ -176,7 +176,7 @@ public class UtilityGame extends ChessGame{
             return board[selectedPiecePosition.getX() + direction][selectedPiecePosition.getY()] == 0;
         }
         //capture move
-        if(Math.abs(distX) == 1 && distY == 1 && board[newPosition.getX()][newPosition.getY()] != 0) {
+        if(Math.abs(distX) == direction && distY == 1 && board[newPosition.getX()][newPosition.getY()] != 0) {
             return true;
         }
         return false;
@@ -234,9 +234,11 @@ public class UtilityGame extends ChessGame{
         for(int i = Math.max(0, king.getX() - 1); i <= Math.min(7, king.getX() + 1); i++) {
             for(int j = Math.max(0, king.getY() - 1); j <= Math.min(7, king.getY() + 1); j++) {
                 //Excluded square king is on
-                if(i != king.getX() || j != king.getY()) {
+                //DEBUGGING || changed to &&
+                if(i != king.getX() && j != king.getY()) {
                     Point p = new Point(i * 81, j * 81);
                     if (isValidMove(p, false) && tryMove(p)) {
+                        System.out.println("King can move: false determination");
                         //not checkmate
                         return false;
                     }
@@ -263,6 +265,8 @@ public class UtilityGame extends ChessGame{
                             //Attempt valid moves that stop check
                             Point p = new Point(targetX * 81, targetY * 81);
                             if (isValidMove(p, false) && tryMove(p)) {
+                                selectedPiece = originalSelectedPiece;
+                                selectedPiecePosition = originalSelectedPiecePosition;
                                 return false;
                             }
                         }

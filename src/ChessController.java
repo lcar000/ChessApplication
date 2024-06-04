@@ -65,15 +65,9 @@ public class ChessController {
     public void newBoardClick(int x, int y) {
 
         boardClick = new Point(x, y);
-//        if(utilityGame.checkMate()) {
-//            System.out.println("CHECKMATE!");
-//        }
+
         if(pieceSelected && utilityGame.isValidMove(boardClick, false)) {
-//            System.out.println("Checkmate Testing");
-//            if(utilityGame.checkMate()) {
-//                CheckMate = true;
-//                System.out.println("CHECKMATE!");
-//            }
+
             if(utilityGame.tryMove(boardClick)) {
                 currentGame.movePiece(boardClick, false);
                 utilityGame.movePiece(boardClick, false);

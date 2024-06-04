@@ -1,6 +1,6 @@
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
 
 public class ChessTest {
   @Test
@@ -1790,7 +1790,7 @@ public class ChessTest {
     setBoard.selectedPiece = 6;
     setBoard.selectedPiecePosition = startingPosition;
     setBoard.playerTurn = "WHITE";
-    boolean test = setBoard.isValidMove(newPosition, false);
+    boolean test = setBoard.tryMove(newPosition);
     assertEquals(false, test);
   }
   
@@ -1820,7 +1820,8 @@ public class ChessTest {
     setBoard.selectedPiece = 6;
     setBoard.selectedPiecePosition = startingPosition;
     setBoard.playerTurn = "WHITE";
-    boolean test = setBoard.isValidMove(newPosition, true);
+    //try move prevent check not isValid
+    boolean test = setBoard.tryMove(newPosition);
     assertEquals(false, test);
   }
   @Test
